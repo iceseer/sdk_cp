@@ -1,3 +1,7 @@
+// NOT FINISHED:
+// 1. no allocators support
+// 2. unable to remove head
+
 namespace list {
 
     template<typename __type> class Node final {
