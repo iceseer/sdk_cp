@@ -1,6 +1,5 @@
 // NOT FINISHED:
-// 1. no allocators support
-// 2. unable to remove head
+// 1. unable to remove head
 
 namespace list {
 
