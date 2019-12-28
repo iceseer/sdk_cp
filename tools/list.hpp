@@ -1,5 +1,5 @@
 // NOT FINISHED:
-// 1. unable to remove head
+// 1. unable to remove head 
 
 namespace list {
 
