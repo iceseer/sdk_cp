@@ -56,7 +56,7 @@ read -p "1 - Да, 0 - Нет: " vm_setting
 if [[ $vm_setting == 0 ]]; then
   gui_install="xorg-server xorg-drivers xorg-xinit"
 elif [[ $vm_setting == 1 ]]; then
-  gui_install="xorg-server xorg-drivers xorg-xinit virtualbox-guest-utils"
+  gui_install="xorg-server xorg-drivers xorg-xinit linux-headers virtualbox-guest-utils"
 fi
 
 echo 'Ставим иксы и драйвера'
