@@ -51,10 +51,6 @@ echo '[multilib]' >> /etc/pacman.conf
 echo 'Include = /etc/pacman.d/mirrorlist' >> /etc/pacman.conf
 pacman -Syy
 
-echo "Куда устанавливем Arch Linux на виртуальную машину?"
-read -p "1 - Да, 0 - Нет: " vm_setting
-gui_install="xorg-server xorg-drivers xorg-xinit"
-
 echo 'Ставим иксы и драйвера. Ставим на ВМ?'
 read -p "0 - VB, 1 - VMWARE, 2 - NO: " vm_setting
 if [[ $vm_setting == 0 ]]; then
