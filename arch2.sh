@@ -53,17 +53,21 @@ pacman -Syy
 
 echo "Куда устанавливем Arch Linux на виртуальную машину?"
 read -p "1 - Да, 0 - Нет: " vm_setting
-if [[ $vm_setting == 0 ]]; then
-  gui_install="xorg-server xorg-drivers xorg-xinit"
-elif [[ $vm_setting == 1 ]]; then
-  gui_install="xorg-server xorg-drivers xorg-xinit linux-headers virtualbox-guest-utils"
-fi
+gui_install="xorg-server xorg-drivers xorg-xinit"
 
-echo 'Ставим иксы и драйвера'
+echo 'Ставим иксы и драйвера. Ставим на ВМ?'
+read -p "0 - VB, 1 - VMWARE, 2 - NO: " vm_setting
+if [[ $vm_setting == 0 ]]; then
+  gui_install="xorg-server xorg-drivers xorg-xinit linux-headers virtualbox-guest-utils"
+elif [[ $vm_setting == 1 ]]; then
+  gui_install="xorg-server xorg-drivers xorg-xinit xorg-utils xorg-server-utils mesa xorg-twm xterm xorg-xclock xf86-video-vmware"
+elif [[ $vm_setting == 2 ]]; then
+  gui_install="xorg-server xorg-drivers xorg-xinit"
+fi
 pacman -S $gui_install
 
 echo "Какое DE ставим?"
-read -p "1 - XFCE, 2 - KDE, 3 - Openbox, 4 - GNOME: " vm_setting
+read -p "1 - XFCE, 2 - KDE, 3 - Openbox, 4 - GNOME, 5 - Cinnamon: " vm_setting
 if [[ $vm_setting == 1 ]]; then
   pacman -S xfce4 xfce4-goodies --noconfirm
 elif [[ $vm_setting == 2 ]]; then
@@ -72,7 +76,11 @@ elif [[ $vm_setting == 3 ]]; then
   pacman -S  openbox xfce4-terminal
 elif [[ $vm_setting == 4 ]]; then  
   pacman -S gnome gnome-extra --noconfirm
+elif [[ $vm_setting == 5 ]]; then  
+  pacman -S  cinnamon nemo-fileroller
 fi
+
+pacman -S pulseaudio pulseaudio-alsa pavucontrol
 
 echo 'Cтавим DM'
 pacman -S lxdm --noconfirm
