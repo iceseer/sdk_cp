@@ -82,6 +82,7 @@ timestamp const k_timeout_infinite = SDK_CP_UINT64_MAX;
 #endif//SDK_CP_ALIGN_MEM
 
 #define field_bind(obj,field) (*(decltype(std::decay<decltype(obj)>::type::field)*)((uint8_t*)&obj + offsetof(std::decay<decltype(obj)>::type, field)))
+#define guard_lock(guard) for (tools::threading::spin_blocker_infinite_flag __guard(guard); __guard; __guard.release())
 
 template<typename T> SDK_CP_ALWAYS_INLINE T const& sdk_cp_min(T const& l, T const& r) {
     return (l < r ? l : r);

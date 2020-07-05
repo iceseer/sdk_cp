@@ -5,7 +5,7 @@ public:
     using allocator_type = __alloc;
 
     using cb_func        = std::function<__callback_type>;
-    using cb_list        = std::vector<cb_func, allocator_type>;
+    using cb_list        = std::vector<cb_func, typename std::allocator_traits<allocator_type>::template rebind_alloc<cb_func>>;
     using cb_list_ref    = cb_list&;
     using cb_list_ptr    = cb_list*;
 
@@ -173,16 +173,16 @@ public:
         } while(e_worker_state::k_ws_working == context._state.load(std::memory_order_relaxed));
     }
 
-    //      Добавление таска                 Агрегатор
+    //      пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ                 пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     //      |                                    |
     //      V                                    V
-    //      Проверяем, что нет числа             Проставляем число
+    //      пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ             пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     //      |                                    |
     //      V                                    V
-    //      Проверяем таски                      Удаляем таски из отработанных
+    //      пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ                      пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     //                                           |
     //                                           V
-    //                                           Вызов колбэков
+    //                                           пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 public:
     void init() {

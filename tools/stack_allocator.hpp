@@ -15,10 +15,17 @@ private:
     point_type _cur_ptr;
 
 public:
+    stack_allocator(stack_allocator const&)             = delete;
+    stack_allocator& operator=(stack_allocator&&)       = delete;
+    stack_allocator& operator=(stack_allocator const&)  = delete;
+
     stack_allocator() {
         _mem_ptr = (point_type)malloc(__size);
         _end_ptr = _mem_ptr + (_mem_ptr != 0 ? __size : 0);
         _cur_ptr = _mem_ptr;
+    }
+    stack_allocator(stack_allocator&& c) : _mem_ptr(c._mem_ptr), _end_ptr(c._end_ptr), _cur_ptr(c._cur_ptr) {
+
     }
     ~stack_allocator() {
         free((pointer_type)_mem_ptr);

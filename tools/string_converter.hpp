@@ -46,6 +46,7 @@ template<typename __string_type> SDK_CP_INLINE __string_type& str_conv(double co
     return to;
 }
 
+#ifdef _WIN32
 template<typename __string_type> SDK_CP_INLINE __string_type& str_conv(uint64_t const from, __string_type& to) {
     char buf[32];
     sprintf(buf, "%llu\0", (long long unsigned int)from);
@@ -53,6 +54,7 @@ template<typename __string_type> SDK_CP_INLINE __string_type& str_conv(uint64_t 
     to += buf;
     return to;
 }
+#endif//_WIN32
 
 inline std::string& str_conv(char const* from, std::string& to) {
     to += ((nullptr != from) ? from : "{null}");
@@ -140,17 +142,22 @@ template<typename string_type> inline string_type& str_conv(std::wstring const& 
     typedef std::codecvt_utf8_utf16<char_type> code_cvt;
     typedef std::allocator<char_type>          wallocator;
 
-    std::wstring_convert<code_cvt, char_type, std::allocator<wchar_t>, string_type::allocator_type> converter;
+    std::wstring_convert<code_cvt, char_type, std::allocator<wchar_t>, typename string_type::allocator_type> converter;
     to += converter.to_bytes(from.c_str());
     return to;
 }
 
 template<typename string_type> inline string_type& str_conv(wchar_t const* from, string_type& to) {
+    if (nullptr == from) {
+        to += "{nullptr}";
+        return to;
+    }
+
     typedef std::wstring::value_type           char_type;
     typedef std::codecvt_utf8_utf16<char_type> code_cvt;
     typedef std::allocator<char_type>          wallocator;
 
-    std::wstring_convert<code_cvt, char_type, std::allocator<wchar_t>, string_type::allocator_type> converter;
+    std::wstring_convert<code_cvt, char_type, std::allocator<wchar_t>, typename string_type::allocator_type> converter;
     to += converter.to_bytes(from);
     return to;
 }
@@ -164,26 +171,27 @@ template<typename wstring_type> inline wstring_type& wstr_conv(uint64_t const fr
 }
 
 template<typename astring_type, typename wstring_type> inline wstring_type& str_conv_to_wstr(astring_type const& from, wstring_type& to) {
-    typedef wstring_type::value_type           char_type;
-    typedef std::codecvt_utf8_utf16<char_type> code_cvt;
+    using char_type = typename wstring_type::value_type;
+    using code_cvt = std::codecvt_utf8_utf16<char_type>;
 
-    typedef wstring_type::allocator_type wallocator_type;
-    typedef astring_type::allocator_type aallocator_type;
+    using wallocator_type = typename wstring_type::allocator_type;
+    using aallocator_type = typename astring_type::allocator_type;
 
     std::wstring_convert<code_cvt, char_type, wallocator_type, aallocator_type> converter;
     to = converter.from_bytes(from.c_str());
     return to;
 }
 
+#ifdef _WIN32
 template<typename wstring_type> inline wstring_type& str_conv_to_wstr(char const* from, wstring_type& to) {
-    typedef wstring_type::value_type           char_type;
-    typedef std::codecvt_utf8_utf16<char_type> code_cvt;
+    using char_type = typename wstring_type::value_type;
+    using code_cvt = std::codecvt_utf8_utf16<char_type>;
 
-    typedef wstring_type::allocator_type wallocator_type;
-    typedef types::fast_allocator<char>  aallocator_type;
+    using wallocator_type = typename wstring_type::allocator_type;
+    using aallocator_type = types::fast_allocator<char>;
 
     std::wstring_convert<code_cvt, char_type, wallocator_type, aallocator_type> converter;
     to = converter.from_bytes(from);
     return to;
 }
-
+#endif//_WIN32

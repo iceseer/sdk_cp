@@ -1,8 +1,8 @@
 template<typename __type, size_t __chunk_size = 32ull, typename __alloc = std::allocator<__type>> class pool_allocator {
-    template<typename __type, typename __alloc = std::allocator<__type>> class pool_chunk {
+    template<typename __type_c, typename __alloc_c = std::allocator<__type_c>> class pool_chunk {
     public:
-        using allocator_type    = typename __alloc::template rebind<uint8_t>::other;
-        using value_type        = __type;
+        using allocator_type    = typename __alloc_c::template rebind<uint8_t>::other;
+        using value_type        = __type_c;
         using value_ptr         = value_type*;
         using const_value_ptr   = value_type const*;
 
@@ -131,7 +131,7 @@ public:
     pool_allocator(pool_allocator const&)               = delete;
     pool_allocator& operator=(pool_allocator const&)    = delete;
 
-    pool_allocator(pool_allocator&& c) 
+    pool_allocator(pool_allocator&& c)
         : _data(std::forward<std::vector<chunk_type>>(c._data))
         , _empty_objs(std::forward<std::vector<size_t>>(c._empty_objs))
     {

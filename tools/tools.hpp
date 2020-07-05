@@ -17,24 +17,27 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include <functional>
+#include <filesystem>
 #include <random>
 #include <codecvt>
 #include <locale>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <future>
 
 #ifdef __GNUG__
-#   define _POSIX_SOURCE
 #   include <unistd.h>
-#   undef _POSIX_SOURCE
 #elif _WIN32
 #   include <direct.h>
 #   include <filesystem>
 #endif
 
 #include <openssl/md5.h>
-#include <jsoncpp/include/json.h>
+#ifdef _WIN32
+#   include <jsoncpp/include/json.h>
+#endif
 
 #ifdef _WIN32
 #   include <time.h>
@@ -57,13 +60,21 @@ namespace tools {
 #   include "file.hpp"
 #   include "list.hpp"
 #   include "string_converter.hpp"
+#ifdef _WIN32
 #   include "binary_serializer.hpp"
+#endif//_WIN32
 #   include "string_utils.hpp"
+#   include "types.hpp"
 
 //  threading
 #   include "wait_for_single_object.hpp"
 #   include "blocker.hpp"
+
+#   include "cache.hpp"
+#   include "log.hpp"
+
 #   include "thread_pool.hpp"
+#   include "chain_executor.hpp"
 
 //  allocators
 #   include "pool_allocator.hpp"
@@ -79,11 +90,12 @@ namespace tools {
 
 //  tools
 #   include "threaded_handler.hpp"
-#   include "cache.hpp"
-#   include "log.hpp"
 #   include "callback_keeper.hpp"
+#ifdef _WIN32
 #   include "json_serializer.hpp"
 #   include "json_writer.hpp"
+#   include "api_module.hpp"
+#endif//_WIN32
 
 // algorithm
 #   include "point.hpp"

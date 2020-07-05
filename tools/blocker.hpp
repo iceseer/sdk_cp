@@ -24,6 +24,33 @@ namespace threading {
         }
     };
 
+    class spin_blocker_infinite_flag final {
+        spin_blocker_infinite_flag(const spin_blocker_infinite_flag &)  = delete;
+        spin_blocker_infinite_flag(const spin_blocker_infinite_flag &&) = delete;
+
+        spin_blocker_infinite_flag & operator=(const spin_blocker_infinite_flag &)  = delete;
+        spin_blocker_infinite_flag & operator=(const spin_blocker_infinite_flag &&) = delete;
+
+        spin_blocker& _blocker;
+        bool          _locked;
+
+    public:
+        spin_blocker_infinite_flag(spin_blocker& blocker) : _blocker(blocker), _locked(true) {
+            _blocker.lock();
+        }
+        ~spin_blocker_infinite_flag() {
+            _blocker.unlock();
+            _locked = false;
+        }
+        void release() {
+            _blocker.unlock();
+            _locked = false;
+        }
+        operator bool() const {
+            return _locked;
+        }
+    };
+
     class spin_blocker_infinite final
     {
         spin_blocker_infinite(const spin_blocker_infinite &)  = delete;

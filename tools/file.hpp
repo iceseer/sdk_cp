@@ -15,7 +15,7 @@ namespace file {
         return false;
     }
 
-    template<typename __string_type> 
+    template<typename __string_type>
     inline bool read_all_file(__string_type& data, file_handle& file) {
         if (!!file) {
             auto fh = file.get();
@@ -58,13 +58,12 @@ namespace file {
         SDK_CP_ASSERT(nullptr != path);
         SDK_CP_ASSERT(0 != sdk_cp_strlen(path));
 
-#   ifdef __GNUG__
-        static_assert(false, "Not impl");
-        return false; 
-#   elif _WIN32
-        std::tr2::sys::path p(path);
-        return std::tr2::sys::create_directory(p);
-#   endif
+#ifdef _WIN32
+        std::filesystem::path p(path);
+        return std::filesystem::create_directory(p);
+#else
+        return false;
+#endif//_WIN32
     }
 
     template<size_t __sz> SDK_CP_ALWAYS_INLINE bool working_dir(char(&buf)[__sz]) {
@@ -78,13 +77,14 @@ namespace file {
             return true;
         }
 
+#ifdef _WIN32
         tools::log::error("'getcwd' return error: ", strerror(errno));
+#endif//_WIN32
         return false;
     }
 
     template<size_t __sz> SDK_CP_ALWAYS_INLINE bool current_dir(char(&buf)[__sz]) {
 #   ifdef __GNUG__
-        static_assert(false, "Not impl");
         return false;
 #   elif _WIN32
         static_assert(__sz >= MAX_PATH, "Too small buffer.");
@@ -98,11 +98,12 @@ namespace file {
         return true;
     }
 
+#ifdef _WIN32
     template<typename __func, size_t __sz> SDK_CP_ALWAYS_INLINE void enumerate_files(char const* dir_path, char const* (&exclude)[__sz], __func&& f) {
         SDK_CP_ASSERT(nullptr != dir_path);
         SDK_CP_ASSERT(0 != sdk_cp_strlen(dir_path));
 
-        for (auto& entry : std::tr2::sys::directory_iterator(dir_path)) {
+        for (auto& entry : std::filesystem::directory_iterator(dir_path)) {
             auto const tmp     = entry.path().filename().generic_string();
             auto const fn_name = tmp.c_str();
             auto const fn_size = tmp.size();
@@ -115,4 +116,5 @@ namespace file {
             }
         }
     }
+#endif//_WIN32
 }

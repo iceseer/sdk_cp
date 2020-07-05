@@ -3,7 +3,8 @@ template<
     typename __type, 
     typename __alloc = std::allocator<__type>,
     typename __hasher = std::hash<__key>,
-    typename __key_eq = std::equal_to<__key>
+    typename __key_eq = std::equal_to<__key>,
+    size_t __block_size = 1ull
 > class linear_hash_map final {
 public:
     typedef __key               key_type;
@@ -17,8 +18,10 @@ public:
     typedef __key_eq            key_eq_type;
 
 private:
-    typedef tools::pool_allocator<value_type, 512ull, allocator_type>                      data_container_type;
-    typedef std::unordered_map<key_type, size_t, hasher_type, key_eq_type, allocator_type> keys_container_type;
+    using map_allocator = typename std::allocator_traits<allocator_type>::template rebind_alloc<std::pair<const key_type, size_t>>;
+
+    typedef tools::pool_allocator<value_type, __block_size, allocator_type>               data_container_type;
+    typedef std::unordered_map<key_type, size_t, hasher_type, key_eq_type, map_allocator> keys_container_type;
 
     data_container_type _data;
     keys_container_type _keys;

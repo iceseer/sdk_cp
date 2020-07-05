@@ -205,8 +205,9 @@ public:
     json_writer& operator=(json_writer const&)  = delete;
     json_writer& operator=(json_writer&&)       = delete;
 
-    SDK_CP_INLINE void write(Json::Value& root, __string_type& out) {
+    template<bool __append_endl = true> SDK_CP_INLINE void write(Json::Value& root, __string_type& out) {
         _write_value(root, out);
-        out += "\n";
+        if (__append_endl)
+            out += "\n";
     }
 };
