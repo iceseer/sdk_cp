@@ -24,7 +24,7 @@ echo 'Создадим загрузочный RAM диск'
 mkinitcpio -p linux
 
 echo '3.5 Устанавливаем загрузчик'
-pacman -Syy
+pacman -Syu
 pacman -S grub --noconfirm 
 grub-install /dev/sda
 
@@ -49,7 +49,7 @@ echo '%wheel ALL=(ALL) ALL' >> /etc/sudoers
 echo 'Раскомментируем репозиторий multilib Для работы 32-битных приложений в 64-битной системе.'
 echo '[multilib]' >> /etc/pacman.conf
 echo 'Include = /etc/pacman.d/mirrorlist' >> /etc/pacman.conf
-pacman -Syy
+pacman -Syu
 
 echo 'Ставим иксы и драйвера. Ставим на ВМ?'
 read -p "0 - VB, 1 - VMWARE, 2 - NO: " vm_setting
